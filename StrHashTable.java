@@ -1,52 +1,44 @@
-import java.util.Arrays;
+public class StrHashTable {
+    private int size;
+    private Node[] hashTable;
+    private int numFullEntries;
 
-public class StrHashTable{
-    int size;
-    Node[] hashTable;
-
-    int numFullEntries, numTotalCollisions, numRehashes;
-
-    public StrHashTable(int size){
-        hashTable = new Node[size];
+    public StrHashTable(int size) {
         this.size = size;
+        this.hashTable = new Node[size];
         this.numFullEntries = 0;
-        this.numTotalCollisions = 0;
-        this.numRehashes = 0;
     }
 
-    public void insert(String k, String v){
-
-        Node newNode = new Node(key, value);
-
-        if((double)numFullEntries / size >= 0.8){
+    public void insert(String key, String value) {
+        if ((double) numFullEntries / size >= 0.8) {
             rehash();
-            numRehashes++;
         }
-        int i = 0;
-        while(hashTable[(getHash(key) + i) % size] != null){
-            i++;
-            numTotalCollisions++;
-            newNode.collisions++;
+
+        int index = hashFunction(key);
+        Node existing = hashTable[index];
+
+        // Only insert if the slot is empty
+        if (existing == null) {
+            hashTable[index] = new Node(key, value);
+            numFullEntries++;
         }
-        hashTable[(getHash(key) + i) % size] = newNode;
-        numFullEntries++;
     }
 
-    public void delete(String k){
-        int index = hashFunction(k);
-        if (hashTable[index] != null && hashTable[index].key.equals(k)){
+    public void delete(String key) {
+        int index = hashFunction(key);
+        Node node = hashTable[index];
+        if (node != null && node.getKey().equals(key)) {
             hashTable[index] = null;
             numFullEntries--;
         }
-
     }
 
-    private int hashFunction(String k){
+    public int hashFunction(String k) {
         int sum = 0;
-        int group =0;
-        for(int i =0; i < k.length(); i++){
+        int group = 0;
+        for (int i = 0; i < k.length(); i++) {
             group = (group << 8) + k.charAt(i);
-            if ((i + 1) % 4 == 0){
+            if ((i + 1) % 4 == 0) {
                 sum += group;
                 group = 0;
             }
@@ -55,58 +47,66 @@ public class StrHashTable{
         return Math.abs(sum) % size;
     }
 
-    private void rehash(){
-        Node[] temp = hashTable;
+    private void rehash() {
+        Node[] oldTable = hashTable;
         size = size * 2;
         hashTable = new Node[size];
+        numFullEntries = 0;
 
-        for (int i = 0; i < temp.length; i++){
-            Node t = temp[i];
-            insert(t.key, t.value);
-            numFullEntries--;
+        for (Node node : oldTable) {
+            if (node != null) {
+                insert(node.getKey(), node.getValue());
+            }
         }
     }
 
-    private bool contains(String k){
-        int index = hashFunction(k);
-        return hashTable[index] != null && hashTable[index].key.equals(k);
+    public boolean contains(String key) {
+        int index = hashFunction(key);
+        Node node = hashTable[index];
+        return node != null && node.getKey().equals(key);
     }
 
-    private String get(String k){
-        int index = hashFunction(k);
-        if(hasTable[index] != null && hashTable[index].key.equals(k)){
-            return hashTable[index].value;
-        }
-        return null;
-
+    public String get(String key) {
+        int index = hashFunction(key);
+        Node node = hashTable[index];
+        return (node != null && node.getKey().equals(key)) ? node.getValue() : null;
     }
 
-    private bool isEmpty(){
+    public boolean isEmpty() {
         return numFullEntries == 0;
     }
 
-    public int count(){
-        return numFullEntries; 
+    public int count() {
+        return numFullEntries;
     }
 
-    public void dump(){
+    public void dump() {
         for (int i = 0; i < size; i++) {
-            if (hashTable[i] != null) {
-                System.out.println(i + ": " + hashTable[i].key + ", " + hashTable[i].value);
+            Node node = hashTable[i];
+            if (node != null) {
+                System.out.println(i + ": " + node.getKey() + ", " + node.getValue());
             } else {
                 System.out.println(i + ": ");
             }
         }
     }
 
-    class Node{
-        public String key;
-        public String Value;
-        public int collisions;
+    // Optional: Inner Node class can be used instead of separate file
+    private static class Node {
+        private final String key;
+        private final String value;
 
-        public Node(String key, String value){
+        public Node(String key, String value) {
             this.key = key;
             this.value = value;
+        }
+
+        public String getKey() {
+            return this.key;
+        }
+
+        public String getValue() {
+            return this.value;
         }
     }
 }
