@@ -1,26 +1,34 @@
-public class Node{
+/**
+ * this is the node class. it stores a key and a value.
+ * used in the hash table to keep stuff together.
+ */
+public class Node {
     public String key;
     public String value;
 
-    public Node(String key, String value){
+    /**
+     * makes a new node with a key and value
+     * @param key the key for the node
+     * @param value the value for the node
+     */
+    public Node(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
     /**
-     * returns the key in node
-     * @return key in node
+     * gets the key from the node
+     * @return the key in the node
      */
-    public String getKey(){
+    public String getKey() {
         return this.key;
     }
 
     /**
-     * returns the value in node
-     * @return value in node
+     * gets the value from the node
+     * @return the value in the node
      */
-    public String getValue(){
+    public String getValue() {
         return this.value;
     }
-
 }

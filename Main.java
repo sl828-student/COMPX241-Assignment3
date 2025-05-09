@@ -1,16 +1,24 @@
+/**
+ * This is the Main class where we test the StrHashTableCollisions class.
+ * It shows how to use the hash table by adding, deleting, and getting stuff.
+ * Also checks how collisions are handled in the table.
+ */
 public class Main {
+
+    /**
+     * The main method is where the program starts running.
+     * We make a hash table, put some values in it, and then do some operations
+     * like checking if stuff is in the table or printing the table.
+     *
+     * @param args Command-line arguments (we dont use them here).
+     */
     public static void main(String[] args) {
-        // Create a small table to test collision handling
         StrHashTableCollisions hashTable = new StrHashTableCollisions(4);
 
-        // Insert some values (some may collide)
         hashTable.insert("one", "1");
         hashTable.insert("two", "2");
         hashTable.insert("three", "3");
         hashTable.insert("four", "4");
-
-        // This would have deleted key "2" if uncommented
-        // hashTable.delete("2");
 
         hashTable.insert("five", "5");
         hashTable.insert("six", "6");
@@ -22,26 +30,21 @@ public class Main {
         hashTable.insert("eleven", "11");
         hashTable.insert("twelve", "12");
 
-        // Show what's inside the table (with collisions shown)
         hashTable.dump();
 
         System.out.println();
         System.out.println();
 
-        // Show count
         System.out.println("no of elements in table: " + hashTable.count());
 
         System.out.println();
         System.out.println();
 
-        // Check contains
         System.out.println("contains eleven? " + hashTable.contains("eleven"));
         System.out.println();
 
-        // Try get
         System.out.println("value for 'eight': " + hashTable.get("eight"));
 
-        // Check empty
         System.out.println("is empty? " + hashTable.isEmpty());
     }
 }
